@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Rain</title>
+    <style>
+        body {
+            margin: 0;
+            overflow-y: auto; /* Enable vertical scrolling */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #000;
+        }
+
+        /* Styling for the rain canvas */
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Container styling */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            margin-top: 20px;
+            width: 80%; /* Adjusted width */
+            max-width: 1200px; /* Maximum width */
+            padding: 20px;
+        }
+
+        /* Animated text styling */
+        .animated-text {
+            font-size: 2em;
+            color: white;
+            animation: text-animation 3s infinite;
+        }
+
+        @keyframes text-animation {
+            0%, 100% {
+                color: white;
+            }
+            50% {
+                color: yellow;
+            }
+        }
+
+        /* Image container styling */
+        .image-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        /* Individual image item styling */
+        .image-item {
+            position: relative;
+            width: 120px; /* Adjusted size */
+            height: 120px; /* Adjusted size */
+            background-color: transparent;
+            margin: 0 20px; /* Space between the images */
+            transition: transform 0.3s; /* Smooth transition for transform */
+            border-radius: 50%; /* Make it circular */
+            overflow: hidden; /* Ensure the circular shape doesn't show corners */
+        }
+
+        /* Image within image item styling */
+        .image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensure the image fills the circular shape */
+            border-radius: 50%; /* Ensure the image itself is circular */
+        }
+
+        /* Video overlay styling */
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            cursor: pointer;
+        }
+
+        /* Video item styling */
+        .video-item {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: auto;
+        }
+
+        /* Contact section styling */
+        .contact-section {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        /* Contact email styling */
+        .contact-email {
+            font-size: 1.2em;
+            color: white;
+            margin: 10px 0;
+            font-weight: bold; /* Added bold font weight */
+        }
+
+        /* Games header styling */
+        .games-header {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        /* Game details section styling */
+        .game-details {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        /* Game image styling */
+        .game-image {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 20px;
+        }
+
+        .game-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Game description styling */
+        .game-description {
+            flex: 1;
+            color: white;
+            text-align: left;
+        }
+
+        /* List styling for game details */
+        .game-description ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+
+        /* Individual list item styling */
+        .game-description li {
+            margin-bottom: 5px;
+        }
+
+        /* Scrollbar for overflow */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="rainCanvas"></canvas>
+    <div class="container">
+        <h1 class="animated-text">After the Rain Games</h1>
+        <div class="contact-section">
+            <p class="contact-email">atrgames.contact@gmail.com</p>
+        </div>
+        <h2 class="games-header">Games:</h2>
+        <div class="image-container">
+            <div class="image-item">
+                <img src="Images/Skate.png" alt="Skate">
+                <div class="video-overlay" id="skateVideo">
+                    <video class="video-item" controls>
+                        <source src="Videos/Skate.webm" type="video/webm">
+                    </video>
+                </div>
+            </div>
+            <div class="image-item">
+                <img src="Images/Syringe.png" alt="Syringe">
+                <div class="video-overlay" id="syringeVideo">
+                    <video class="video-item" controls>
+                        <source src="Videos/Syringe.webm" type="video/webm">
+                    </video>
+                </div>
+            </div>
+            <div class="image-item">
+                <img src="Images/Turtle.png" alt="Turtle">
+                <div class="video-overlay" id="turtleVideo">
+                    <video class="video-item" controls>
+                        <source src="Videos/Turtle.webm" type="video/webm">
+                    </video>
+                </div>
+            </div>
+        </div>
+        <div class="game-details">
+            <div class="game-image">
+                <img src="Images/Skate.png" alt="Skate">
+            </div>
+            <div class="game-description">
+                <p>This is a placeholder for game description. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis leo est. Integer vel velit at libero faucibus ullamcorper. Donec sit amet ligula eget augue interdum dignissim.</p>
+                <ul>
+                    <li>Feature 1</li>
+                    <li>Feature 2</li>
+                    <li>Feature 3</li>
+                </ul>
+            </div>
+        </div>
+        <div class="game-details">
+            <div class="game-image">
+                <img src="Images/Syringe.png" alt="Syringe">
+            </div>
+            <div class="game-description">
+                <p>This is a placeholder for game description. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis leo est. Integer vel velit at libero faucibus ullamcorper. Donec sit amet ligula eget augue interdum dignissim.</p>
+                <ul>
+                    <li>Feature 1</li>
+                    <li>Feature 2</li>
+                    <li>Feature 3</li>
+                </ul>
+            </div>
+        </div>
+        <div class="game-details">
+            <div class="game-image">
+                <img src="Images/Turtle.png" alt="Turtle">
+            </div>
+            <div class="game-description">
+                <p>This is a placeholder for game description. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis leo est. Integer vel velit at libero faucibus ullamcorper. Donec sit amet ligula eget augue interdum dignissim.</p>
+                <ul>
+                    <li>Feature 1</li>
+                    <li>Feature 2</li>
+                    <li>Feature 3</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const videos = document.querySelectorAll('.video-item');
+            const overlays = document.querySelectorAll('.video-overlay');
+
+            overlays.forEach(overlay => {
+                const video = overlay.querySelector('video');
+
+                overlay.addEventListener('mouseenter', () => {
+                    video.currentTime = 0; // Start from the beginning each time
+                    video.play();
+                    overlay.style.display = 'block';
+                });
+
+                overlay.addEventListener('mouseleave', () => {
+                    video.pause();
+                    overlay.style.display = 'none';
+                });
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('rainCanvas');
+            const ctx = canvas.getContext('2d');
+
+            let mouseX = 0;
+            let mouseY = 0;
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            document.addEventListener('mousemove', (event) => {
+                mouseX = event.clientX;
+                mouseY = event.clientY;
+            });
+
+            function createRaindrop(x, y) {
+                return {
+                    x,
+                    y,
+                    speed: 2 + Math.random() * 3, // Adjusted speed range for slower rain
+                    radius: 2 + Math.random() * 2
+                };
+            }
+
+            const raindrops = Array.from({ length: 500 }, () => createRaindrop(Math.random() * canvas.width, Math.random() * canvas.height));
+
+            function updateRaindrops() {
+                raindrops.forEach(raindrop => {
+                    raindrop.y += raindrop.speed;
+                    if (raindrop.y > canvas.height) {
+                        raindrop.y = -raindrop.radius;
+                        raindrop.x = Math.random() * canvas.width;
+                    }
+                    
+                    const dist = Math.hypot(raindrop.x - mouseX, raindrop.y - mouseY);
+                    if (dist < 100) {
+                        const angle = Math.atan2(raindrop.y - mouseY, raindrop.x - mouseX);
+                        raindrop.x += Math.cos(angle) * 5;
+                        raindrop.y += Math.sin(angle) * 5;
+                    }
+                });
+            }
+
+            function drawRaindrops() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = 'rgba(174,194,224,0.5)';
+                raindrops.forEach(raindrop => {
+                    ctx.beginPath();
+                    ctx.arc(raindrop.x, raindrop.y, raindrop.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+            }
+
+            function animate() {
+                updateRaindrops();
+                drawRaindrops();
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+        });
+    </script>
+</body>
+</html>
